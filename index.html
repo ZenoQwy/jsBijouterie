@@ -14,37 +14,81 @@
   <div class="container">
     <div class="row">
       <div class="col-12 col-md-9">
-        <h1>Les clients</h1>
-        <ol class="list-group" id="olClient">
+        <h1>Les produits</h1>
+        <ol class="list-group" id="olProduits">
         </ol>
-        <button type="button" id="changeOrder" class="my-2 btn btn-outline-primary">Inverser l'odre
-          alphabétique</button>
       </div>
-      <div class="col">
-        <h1>Rechercher</h1>
-        <div id="input-nom" class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">1</span>
-          </div>
-          <input type="text" class="form-control" placeholder="nom" aria-label="nom" aria-describedby="basic-addon1">
-        </div>
-        <div id="input-prenom" class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">2</span>
-          </div>
-          <input type="text" class="form-control" placeholder="prenom" aria-label="prenom" aria-describedby="basic-addon1">
-        </div>
-        <ol class="list-group" id="recherche">
+    </div>
+
+    <div class="row mx-auto pt-5">
+      <div class="col-12 col-md-9">
+        <h1>Les types de produits</h1>
+        <ol class="list-group" id="olTypes">
         </ol>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row pt-5">
+        <div class="col-12 col-md-9">
+          <h1>Connexion</h1>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">1</span>
+            </div>
+            <input id="input-emailConnexion" type="text" class="form-control" placeholder="email" aria-label="email" aria-describedby="basic-addon1">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">2</span>
+            </div>
+            <input id="input-passwordConnexion" type="password" class="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1">
+          </div>
+        </div>
+        <button type="button" id="login" class="my-2 btn btn-outline-primary">Connexion</button>
+  
+        <div class="col">
+          <h1>Inscription</h1>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">1</span>
+            </div>
+            <input id="input-emailInscription" type="text" class="form-control" placeholder="email" aria-label="email" aria-describedby="basic-addon1">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">2</span>
+            </div>
+            <input id="input-passwordInscription" type="password" class="form-control" placeholder="password" aria-label="password" aria-describedby="basic-addon1">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">3</span>
+            </div>
+            <input id="input-nomInscription" type="text" class="form-control" placeholder="nom" aria-label="nom" aria-describedby="basic-addon1">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">4</span>
+            </div>
+            <input id="input-prenomInscription" type="text" class="form-control" placeholder="prenom" aria-label="prenom" aria-describedby="basic-addon1">
+          </div>
+        </div>
+        <button type="button" id="register" class="my-2 btn btn-outline-primary">Inscription</button>
+      </div>
+  </div>
+
+  <div class="spinner-grow" >
+    <span class="">Loading...</span>
     </div>
   </div>
-  </div>
 
-
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script type="module" src="js/main.js"> </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
+
 
 </body>
 

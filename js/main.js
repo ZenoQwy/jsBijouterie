@@ -1,55 +1,87 @@
-import { getClientsAsc } from "./api/api_clients.js";
-import { getClientsDesc } from "./api/api_clients.js";
-import { getClientsByNom } from "./api/api_clients.js";
-import { getClientsByPrenom} from "./api/api_clients.js";
+import { getProduits } from "./api/api_produits.js";
+import { getTypes } from "./api/api_types.js";
 
-const buttonOrder = document.getElementById("changeOrder");
-const inputNom = document.getElementById("input-nom");
-const inputPrenom = document.getElementById("input-prenom");
+const inputEmailConnexion = document.getElementById("input-emailConnexion");
+const inputPasswordConnexion = document.getElementById("input-passwordConnexion");
+const buttonLogin = document.getElementById("login");
+buttonLogin.addEventListener("click", login);
 
-buttonOrder.addEventListener("click", changeOdreAlpha);
 
-inputNom.addEventListener('input',searcheByNom)
-inputPrenom.addEventListener('input',searcheByPrenom)
+const inputEmailInscription = document.getElementById("input-emailInscription");
+const inputPasswordInscription = document.getElementById("input-passwordInscription");
+const inputNomInscription = document.getElementById("input-nomInscription");
+const inputPrenomInscription = document.getElementById("input-prenomInscription");
+const buttonRegister = document.getElementById("register");
+buttonRegister.addEventListener("click", register);
 
-var ordreAlpha = true
+async function afficherProduits(){
+    try{
+        const produits = await getProduits();
+        var lesProduits = produits["hydra:member"];
+        var olProduits = document.getElementById('olProduits');
+        for(let produit of lesProduits){
+            var li = document.createElement("li");
+            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
+            
+            var div1 = document.createElement("div");
+            var div2 = document.createElement("div");
+           
+            div2.innerHTML = '<span class="material-symbols-outlined"></span>'+produit.nom;
+            
+            //div2.classList.add('fw-bold');
+        
+            li.appendChild(div1);
+            div1.appendChild(div2);
+            olProduits.appendChild(li);
+        }
 
-function changeOdreAlpha() {
-    ordreAlpha = !ordreAlpha
-    purgeOlClient();
-    if(ordreAlpha == true){
-        afficherClientsASC();
-    }else{
-        afficherClientsDESC();
+    }catch(erreur){
+        console.log(`Erreur : ${erreur}`);
     }
+}
+
+async function afficherTypes(){
+    try{
+        const types = await getTypes();
+        var lesTypes = types["hydra:member"];
+        var olTypes = document.getElementById('olTypes');
+        for(let type of lesTypes){
+            var li = document.createElement("li");
+            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
+            
+            const div1 = document.createElement("div");
+            const div2 = document.createElement("div");
+            const span = document.createElement("span");
+            const hr = document.createElement("hr");
+           
     
-}
-
-function purgeOlClient() {
-    var olClient = document.getElementById('olClient');
-    olClient.innerHTML = "";
-}
-
-
-async function afficherClientsASC(){
-    try{
-        const clients = await getClientsAsc();
-        var lesClients = clients["hydra:member"];
-        var olClient = document.getElementById('olClient');
-        for(let client of lesClients){
-            var li = document.createElement("li");
-            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
-            
-            var div1 = document.createElement("div");
-            var div2 = document.createElement("div");
-           
-            div2.innerHTML = '<span class="material-symbols-outlined"></span>'+client.nom+' '+client.prenom ;
-            
-            //div2.classList.add('fw-bold');
         
             li.appendChild(div1);
             div1.appendChild(div2);
-            olClient.appendChild(li);
+            
+            hr.style.height = "5px"; 
+            hr.style.width = "250px"; 
+            hr.style.backgroundColor = "black"; 
+          
+            div1.innerText = `${type.description}`;
+            div1.classList.add('fw-bold');
+        
+            div2.classList.add('fw-normal');
+          
+            li.appendChild(div1);
+            div1.appendChild(div2);
+          
+            if (type.produits.length > 0) {
+              span.classList.add("badge", "bg-primary", "rounded-pill");
+              span.innerText = type.produits.length;
+              const details = document.createElement("details");
+              details.innerHTML = `<summary>Détails</summary><ul>${type.produits.map(produits => `<li>Nom : ${produits.nom}<br>Prix unité : ${produits.prixUnite} €<br>Quantité en stock : ${produits.quantiteStock}</li>`).join('')}</ul><hr>`;              
+              div1.appendChild(hr);
+              li.appendChild(details);
+            }
+          
+            li.appendChild(span);
+            olTypes.appendChild(li);
         }
 
     }catch(erreur){
@@ -57,80 +89,74 @@ async function afficherClientsASC(){
     }
 }
 
-async function afficherClientsDESC(){
-    try{
-        const clients = await getClientsDesc();
-        var lesClients = clients["hydra:member"];
-        var olClient = document.getElementById('olClient');
-        for(let client of lesClients){
-            var li = document.createElement("li");
-            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
-            
-            var div1 = document.createElement("div");
-            var div2 = document.createElement("div");
-           
-            div2.innerHTML = '<span class="material-symbols-outlined"></span>'+client.nom+' '+client.prenom ;
-            
-            //div2.classList.add('fw-bold');
-        
-            li.appendChild(div1);
-            div1.appendChild(div2);
-            olClient.appendChild(li);
+function login() {
+    var request = $.ajax({
+      headers: {
+        'Accept': 'application/ld+json',
+        'Content-Type': 'application/ld+json',
+      },
+      url: "https://s3-4676.nuage-peda.fr/BouchApi/api/authentication_token",
+      method: "POST",
+      data: JSON.stringify({
+        email: inputEmailConnexion.value, // Utilisez la valeur de l'input email pour la connexion
+        password: inputPasswordConnexion.value, // Utilisez la valeur de l'input password pour la connexion
+      }),
+      dataType: "json",
+      beforeSend: function (xhr) {
+        xhr.overrideMimeType("application/ld+json; charset=utf-8");
+      }
+    });
+  
+    request.done(function (msg) {
+      console.log(msg);
+  
+      // Enregistrez le token dans le localStorage
+      localStorage.setItem('token', msg.token);
+      localStorage.setItem('email', inputEmailInscription.value);
+      localStorage.setItem('password', inputPasswordInscription.value,);
+  
+      // Affiche une boîte de dialogue d'alerte
+      alert('Connecté !');
+    });
+  
+    request.fail(function (jqXHR, textStatus, errorThrown) {
+      //console.log("Request failed:", textStatus, errorThrown);
+      //console.log("Response Text:", jqXHR.responseText);
+      
+      alert('Échec de la connexion. Veuillez vérifier vos informations.');
+    });
+  }
+  
+  
+  function register() {
+    function createUser() {
+      var request = $.ajax({
+        headers: {
+          'Accept': 'application/ld+json',
+          'Content-Type': 'application/ld+json',
+        },
+        url: "https://s3-4676.nuage-peda.fr/BouchApi/api/clients",
+        method: "POST",
+        data: JSON.stringify({
+          email: inputEmailInscription.value, 
+          password: inputPasswordInscription.value, 
+          nom: inputNomInscription.value, 
+          prenom: inputPrenomInscription.value, 
+        }),
+        dataType: "json",
+        beforeSend: function (xhr) {
+          xhr.overrideMimeType("application/ld+json; charset=utf-8");
         }
-
-    }catch(erreur){
-        console.log(`Erreur : ${erreur}`);
+      });
+  
+      request.fail(function (jqXHR, textStatus, errorThrown) {
+        console.log("Request failed:", textStatus, errorThrown);
+        console.log("Response Text:", jqXHR.responseText);
+      });
     }
-}
+  
+    createUser();
+  }
 
-async function searcheByNom(){
-    try{
-        const client = await getClientsByNom(inputNom.querySelector('input').value);
-        var recherche = document.getElementById('recherche');
-
-            var li = document.createElement("li");
-            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
-            
-            var div1 = document.createElement("div");
-            var div2 = document.createElement("div");
-           
-            div2.innerHTML = '<span class="material-symbols-outlined"></span>'+client.nom+' '+client.prenom ;
-            
-            //div2.classList.add('fw-bold');
-        
-            li.appendChild(div1);
-            div1.appendChild(div2);
-            recherche.appendChild(li);
-
-
-    }catch(erreur){
-        console.log(`Erreur : ${erreur}`);
-    }
-};
-
-async function searcheByPrenom(){
-    try{
-        const client = await getClientsByPrenom(inputPrenom.querySelector('input').value);
-        var recherche = document.getElementById('recherche');
-
-            var li = document.createElement("li");
-            li.classList.add("list-group-item", "d-flex","justify-content-between","align-items-start")
-            
-            var div1 = document.createElement("div");
-            var div2 = document.createElement("div");
-           
-            div2.innerHTML = '<span class="material-symbols-outlined"></span>'+client.nom+' '+client.prenom ;
-            
-            //div2.classList.add('fw-bold');
-        
-            li.appendChild(div1);
-            div1.appendChild(div2);
-            recherche.appendChild(li);
-
-
-    }catch(erreur){
-        console.log(`Erreur : ${erreur}`);
-    }
-};
-
-afficherClientsASC();
+afficherProduits();
+afficherTypes();
